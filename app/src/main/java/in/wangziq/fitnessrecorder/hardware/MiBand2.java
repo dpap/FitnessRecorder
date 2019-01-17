@@ -463,13 +463,14 @@ public final class MiBand2 {
         float count = 0;
         float x = 0, y = 0, z = 0;
         for (int i = 2; i < value.length; i += 6, count += 1) {
-            x += (value[i]   | (value[i+1] << 8));
-            y += (value[i+2] | (value[i+3] << 8));
-            z += (value[i+4] | (value[i+5] << 8));
+            x = (value[i]   | (value[i+1] << 8));
+            y = (value[i+2] | (value[i+3] << 8));
+            z = (value[i+4] | (value[i+5] << 8));
+            if (mAccelerationHandler != null) mAccelerationHandler.accept(x, y, z);
         }
         x /= count; y /= count; z /= count;
         Log.i(TAG, String.format("parseAcceleration: x=%.3f, y=%.3f, z=%.3f, total=%.3f", x, y, z, Math.sqrt(x*x + y*y + z*z)));
-        if (mAccelerationHandler != null) mAccelerationHandler.accept(x, y, z);
+       // if (mAccelerationHandler != null) mAccelerationHandler.accept(x, y, z);
     }
 
     private boolean turnOnRawDataNotify() {

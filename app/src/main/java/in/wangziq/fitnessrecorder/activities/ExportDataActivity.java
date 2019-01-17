@@ -49,8 +49,9 @@ public final class ExportDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_export_data);
 
-        File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
         mAppDir = new File(downloadDir, getString(R.string.app_name));
+        mAppDir.mkdir();
         mBinding.exportTip.setText(getString(R.string.export_tip, mAppDir.toString()));
 
         mDatabase = new DbTool(this);

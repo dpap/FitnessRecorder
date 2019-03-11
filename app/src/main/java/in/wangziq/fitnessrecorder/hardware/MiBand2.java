@@ -30,7 +30,7 @@ public final class MiBand2 {
 
     public interface TriFloatConsumer { void accept(float x, float y, float z); }
 
-    private static final int REFRESH_TIMEOUT = 100; // 100ms
+    private static final int REFRESH_TIMEOUT = 400; // 100ms
     private static final int USR_INTERACTION_TIMEOUT = 20000; // 20s
     private static final String TAG = MiBand2.class.getSimpleName();
 
@@ -462,14 +462,34 @@ public final class MiBand2 {
         }
         float count = 0;
         float x = 0, y = 0, z = 0;
+        short xdatah = 0 ;
+        short xdatal = 0 ;
+        short ydatah = 0 ;
+        short ydatal = 0 ;
+        short zdatah = 0 ;
+        short zdatal = 0 ;
+        short x1 = 0, y1 = 0 , z1 = 0;
+
         for (int i = 2; i < value.length; i += 6, count += 1) {
-            x = (value[i]   | (value[i+1] << 8));
-            y = (value[i+2] | (value[i+3] << 8));
-            z = (value[i+4] | (value[i+5] << 8));
+            xdatah =(short) ( value[i+1] & 0xff) ;
+            xdatal =(short) (value[i] & 0xff );
+            x1 = (short) (((((xdatah << 8) | xdatal)-50) & 0xffff) * 100) ;
+            x = ((float) x1)/2300;
+            ydatah = (short) (value[i + 3] & 0xff);
+            ydatal = (short) (value[i + 2] & 0xff);
+            y1 = (short) (((((ydatah << 8) | ydatal)-50) & 0xffff) * 100);
+            y = ((float) y1)/2300;
+            zdatah = (short) (value[i + 5] & 0xff);
+            zdatal = (short) (value[i + 4] & 0xff);
+            z1 = (short) (((((zdatah << 8) | zdatal)-50) & 0xffff) * 100);
+            z = ((float) z1)/2300;
             if (mAccelerationHandler != null) mAccelerationHandler.accept(x, y, z);
         }
-        x /= count; y /= count; z /= count;
-        Log.i(TAG, String.format("parseAcceleration: x=%.3f, y=%.3f, z=%.3f, total=%.3f", x, y, z, Math.sqrt(x*x + y*y + z*z)));
+        //x /= count; y /= count; z /= count;
+//        Log.i(TAG, String.format("parseAcceleration: x=%.3f, y=%.3f, z=%.3f, total=%.3f", x, y, z, Math.sqrt(x*x + y*y + z*z)));
+
+        Log.i(TAG, String.format("parseAcceleration: x=%.3f %d, y=%.3f %d, z=%.3f %d,  x=%x %x, y=%x %x, z=%x %x ", x, x1,  y, y1 , z, z1,
+                xdatah,xdatal, ydatah,ydatal,zdatah,zdatal));
        // if (mAccelerationHandler != null) mAccelerationHandler.accept(x, y, z);
     }
 

@@ -45,7 +45,7 @@ public class Messenger extends BroadcastReceiver {
             Log.w(TAG, logMsg.append(", unknown action: ").append(action).toString());
         else {
             t.handleResponse(intent);
-            Log.i(TAG, logMsg.append(", action=").append(action).toString());
+            //Log.i(TAG, logMsg.append(", action=").append(action).toString());
         }
     }
 
